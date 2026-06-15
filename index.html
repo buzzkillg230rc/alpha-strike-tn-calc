@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Alpha Strike TN Calculator</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h1>Alpha Strike TN Calculator</h1>
+
+  <label>Skill: <input id="skill" type="number" value="4"></label><br>
+  <label>Range Mod: <input id="range" type="number" value="0"></label><br>
+  <label>Target Move Mod: <input id="tmm" type="number" value="0"></label><br>
+  <label>Attacker Move Mod: <input id="amm" type="number" value="0"></label><br>
+  <label>Other Mods: <input id="other" type="number" value="0"></label><br>
+
+  <button onclick="calc()">Calculate</button>
+
+  <h2 id="result"></h2>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
