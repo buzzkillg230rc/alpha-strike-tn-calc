@@ -12,7 +12,7 @@ body {
 }
 
 .app {
-  max-width: 480px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 1.5rem 1rem 3rem;
 }
@@ -31,6 +31,43 @@ body {
   margin: 0.25rem 0 0;
   font-size: 0.9rem;
   color: #9ca3af;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #374151;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  font-size: 1rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn:hover {
+  color: #e5e7eb;
+}
+
+.tab-btn.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+/* Tab Content */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
 }
 
 .card {
@@ -159,6 +196,35 @@ select:focus {
 
 .ref-list li {
   margin-bottom: 0.25rem;
+}
+
+/* Cheat Sheet Tables */
+.cheatsheet-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.cheatsheet-table thead {
+  background: #111827;
+}
+
+.cheatsheet-table th {
+  padding: 0.6rem 0.5rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #374151;
+  color: #3b82f6;
+}
+
+.cheatsheet-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #374151;
+}
+
+.cheatsheet-table tbody tr:hover {
+  background: #111827;
 }
 
 @media (min-width: 600px) {
