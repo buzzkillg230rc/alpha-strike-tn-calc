@@ -2,13 +2,13 @@ function getNumber(id) {
   return Number(document.getElementById(id).value) || 0;
 }
 
-function setHiddenFromButtons(groupId, inputId, activeClass) {
+function setHiddenFromButtons(groupId, inputId, activeClass, dataAttr) {
   const group = document.getElementById(groupId);
   const input = document.getElementById(inputId);
   group.addEventListener("click", (e) => {
     const btn = e.target.closest("button");
     if (!btn) return;
-    const value = Number(btn.dataset.range ?? btn.dataset.cover ?? 0);
+    const value = Number(btn.dataset[dataAttr] ?? 0);
     input.value = value;
 
     [...group.querySelectorAll("button")].forEach((b) =>
@@ -41,8 +41,8 @@ function calculateTN() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setHiddenFromButtons("range-buttons", "range", "active");
-  setHiddenFromButtons("cover-buttons", "cover", "active");
+  setHiddenFromButtons("range-buttons", "range", "active", "range");
+  setHiddenFromButtons("cover-buttons", "cover", "active", "cover");
 
   ["skill", "tmm", "amm", "other"].forEach((id) => {
     document.getElementById(id).addEventListener("input", calculateTN);
