@@ -39,7 +39,28 @@ function calculateTN() {
     `${tmm} (TMM) + ${amm} (attacker move) + ${cover} (cover) + ${other} (other)`;
 }
 
+function setupTabs() {
+  const tabBtns = document.querySelectorAll(".tab-btn");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  tabBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tabName = btn.dataset.tab;
+
+      // Remove active class from all buttons and content
+      tabBtns.forEach((b) => b.classList.remove("active"));
+      tabContents.forEach((content) => content.classList.remove("active"));
+
+      // Add active class to clicked button and corresponding content
+      btn.classList.add("active");
+      document.getElementById(tabName + "-tab").classList.add("active");
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  setupTabs();
+  
   setHiddenFromButtons("range-buttons", "range", "active", "range");
   setHiddenFromButtons("cover-buttons", "cover", "active", "cover");
 
