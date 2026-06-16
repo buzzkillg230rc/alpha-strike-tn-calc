@@ -44,7 +44,8 @@ function setupTabs() {
   const tabContents = document.querySelectorAll(".tab-content");
 
   tabBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
       const tabName = btn.dataset.tab;
 
       // Remove active class from all buttons and content
@@ -53,7 +54,10 @@ function setupTabs() {
 
       // Add active class to clicked button and corresponding content
       btn.classList.add("active");
-      document.getElementById(tabName + "-tab").classList.add("active");
+      const targetTab = document.getElementById(tabName + "-tab");
+      if (targetTab) {
+        targetTab.classList.add("active");
+      }
     });
   });
 }
@@ -65,11 +69,17 @@ document.addEventListener("DOMContentLoaded", () => {
   setHiddenFromButtons("cover-buttons", "cover", "active", "cover");
 
   ["skill", "tmm", "amm", "other"].forEach((id) => {
-    document.getElementById(id).addEventListener("input", calculateTN);
-    document.getElementById(id).addEventListener("change", calculateTN);
+    const element = document.getElementById(id);
+    if (element) {
+      element.addEventListener("input", calculateTN);
+      element.addEventListener("change", calculateTN);
+    }
   });
 
-  document.getElementById("calc-btn").addEventListener("click", calculateTN);
+  const calcBtn = document.getElementById("calc-btn");
+  if (calcBtn) {
+    calcBtn.addEventListener("click", calculateTN);
+  }
 
   calculateTN();
 });
