@@ -1,32 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Alpha Strike TN Calculator</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- PWA manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- iOS standalone support -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 </head>
 <body>
-  <h1>Alpha Strike TN Calculator</h1>
+  <div class="app">
+    <header class="app-header">
+      <h1>Alpha Strike TN Calculator</h1>
+      <p class="subtitle">BattleTech: Alpha Strike quick-reference</p>
+    </header>
 
-  <label>Skill: <input id="skill" type="number" value="4"></label><br>
-  <label>Range Mod: <input id="range" type="number" value="0"></label><br>
-  <label>Target Move Mod: <input id="tmm" type="number" value="0"></label><br>
-  <label>Attacker Move Mod: <input id="amm" type="number" value="0"></label><br>
-  <label>Other Mods: <input id="other" type="number" value="0"></label><br>
+    <main>
+      <section class="card">
+        <h2>Inputs</h2>
 
-  <button onclick="calc()">Calculate</button>
+        <div class="field">
+          <label for="skill">Attacker Skill</label>
+          <input id="skill" type="number" value="4" min="0" />
+        </div>
 
-  <h2 id="result"></h2>
+        <div class="field">
+          <label for="range">Range</label>
+          <div class="button-group" id="range-buttons">
+            <button type="button" data-range="0" class="btn btn-range active">Short (0)</button>
+            <button type="button" data-range="2" class="btn btn-range">Medium (+2)</button>
+            <button type="button" data-range="4" class="btn btn-range">Long (+4)</button>
+          </div>
+          <input id="range" type="number" value="0" class="hidden-input" />
+        </div>
+
+        <div class="field">
+          <label for="tmm">Target Movement Modifier (TMM)</label>
+          <select id="tmm">
+            <option value="0">0 – 4" (0)</option>
+            <option value="1">5 – 8" (+1)</option>
+            <option value="2">9 – 12" (+2)</option>
+            <option value="3">13 – 18" (+3)</option>
+            <option value="4">19 – 24" (+4)</option>
+            <option value="5">25 – 30" (+5)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="amm">Attacker Movement</label>
+          <select id="amm">
+            <option value="0">Stationary (0)</option>
+            <option value="1">Moved (+1)</option>
+            <option value="2">Jumped (+2)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Cover</label>
+          <div class="button-group" id="cover-buttons">
+            <button type="button" data-cover="0" class="btn btn-cover active">None (0)</button>
+            <button type="button" data-cover="1" class="btn btn-cover">Partial (+1)</button>
+            <button type="button" data-cover="2" class="btn btn-cover">Heavy (+2)</button>
+          </div>
+          <input id="cover" type="number" value="0" class="hidden-input" />
+        </div>
+
+        <div class="field">
+          <label for="other">Other Modifiers</label>
+          <input id="other" type="number" value="0" />
+          <p class="hint">
+            Indirect fire, special abilities, heat, terrain, etc.
+          </p>
+        </div>
+
+        <button id="calc-btn" class="btn primary">Calculate TN</button>
+      </section>
+
+      <section class="card result-card">
+        <h2>Result</h2>
+        <p class="formula">
+          TN = 2 + Skill + Range + TMM + Attacker Move + Cover + Other
+        </p>
+        <div id="result" class="result-value">Target Number: 8</div>
+        <p id="breakdown" class="breakdown"></p>
+      </section>
+
+      <section class="card small">
+        <h2>Quick Reference</h2>
+        <ul class="ref-list">
+          <li><strong>Range:</strong> Short 0, Medium +2, Long +4</li>
+          <li><strong>Attacker Move:</strong> 0 / +1 / +2 (jump)</li>
+          <li><strong>Cover:</strong> None 0, Partial +1, Heavy +2</li>
+          <li><strong>TMM:</strong> Based on target distance moved</li>
+        </ul>
+      </section>
+    </main>
+  </div>
 
   <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js");
+      });
+    }
+  </script>
 </body>
 </html>
-
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
-}
-</script>
-
