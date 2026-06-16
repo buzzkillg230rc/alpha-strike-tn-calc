@@ -27,8 +27,7 @@ function calculateTN() {
   const cover = getNumber("cover");
   const other = getNumber("other");
 
-  const base = 2;
-  const tn = base + skill + range + tmm + amm + cover + other;
+  const tn = skill + range + tmm + amm + cover + other;
 
   const resultEl = document.getElementById("result");
   const breakdownEl = document.getElementById("breakdown");
@@ -36,7 +35,7 @@ function calculateTN() {
   resultEl.textContent = "Target Number: " + tn;
 
   breakdownEl.textContent =
-    `2 (base) + ${skill} (skill) + ${range} (range) + ` +
+    `${skill} (skill) + ${range} (range) + ` +
     `${tmm} (TMM) + ${amm} (attacker move) + ${cover} (cover) + ${other} (other)`;
 }
 
