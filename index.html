@@ -22,85 +22,304 @@
       <p class="subtitle">BattleTech: Alpha Strike quick-reference</p>
     </header>
 
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <button class="tab-btn active" data-tab="calculator">Calculator</button>
+      <button class="tab-btn" data-tab="cheatsheet">Cheat Sheet</button>
+    </div>
+
     <main>
-      <section class="card">
-        <h2>Inputs</h2>
+      <!-- Calculator Tab -->
+      <div id="calculator-tab" class="tab-content active">
+        <section class="card">
+          <h2>Inputs</h2>
 
-        <div class="field">
-          <label for="skill">Attacker Skill</label>
-          <input id="skill" type="number" value="4" min="0" />
-        </div>
-
-        <div class="field">
-          <label for="range">Range</label>
-          <div class="button-group" id="range-buttons">
-            <button type="button" data-range="0" class="btn btn-range active">Short (0)</button>
-            <button type="button" data-range="2" class="btn btn-range">Medium (+2)</button>
-            <button type="button" data-range="4" class="btn btn-range">Long (+4)</button>
+          <div class="field">
+            <label for="skill">Attacker Skill</label>
+            <input id="skill" type="number" value="4" min="0" />
           </div>
-          <input id="range" type="number" value="0" class="hidden-input" />
-        </div>
 
-        <div class="field">
-          <label for="tmm">Target Movement Modifier (TMM)</label>
-          <select id="tmm">
-            <option value="0">0 – 4" (0)</option>
-            <option value="1">5 – 8" (+1)</option>
-            <option value="2">9 – 12" (+2)</option>
-            <option value="3">13 – 18" (+3)</option>
-            <option value="4">19 – 24" (+4)</option>
-            <option value="5">25 – 30" (+5)</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="amm">Attacker Movement</label>
-          <select id="amm">
-            <option value="0">Stationary (0)</option>
-            <option value="1">Moved (+1)</option>
-            <option value="2">Jumped (+2)</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Cover</label>
-          <div class="button-group" id="cover-buttons">
-            <button type="button" data-cover="0" class="btn btn-cover active">None (0)</button>
-            <button type="button" data-cover="1" class="btn btn-cover">Partial (+1)</button>
-            <button type="button" data-cover="2" class="btn btn-cover">Heavy (+2)</button>
+          <div class="field">
+            <label for="range">Range</label>
+            <div class="button-group" id="range-buttons">
+              <button type="button" data-range="0" class="btn btn-range active">Short (0)</button>
+              <button type="button" data-range="2" class="btn btn-range">Medium (+2)</button>
+              <button type="button" data-range="4" class="btn btn-range">Long (+4)</button>
+              <button type="button" data-range="6" class="btn btn-range">Extreme (+6)</button>
+            </div>
+            <input id="range" type="number" value="0" class="hidden-input" />
           </div>
-          <input id="cover" type="number" value="0" class="hidden-input" />
-        </div>
 
-        <div class="field">
-          <label for="other">Other Modifiers</label>
-          <input id="other" type="number" value="0" />
-          <p class="hint">
-            Indirect fire, special abilities, heat, terrain, etc.
+          <div class="field">
+            <label for="tmm">Target Movement Modifier (TMM)</label>
+            <select id="tmm">
+              <option value="0">0 – 2" (0)</option>
+              <option value="1">3 – 4" (+1)</option>
+              <option value="2">5 – 6" (+2)</option>
+              <option value="3">7 – 9" (+3)</option>
+              <option value="4">10 – 12" (+4)</option>
+              <option value="5">13 – 18" (+5)</option>
+              <option value="6">19 – 24" (+6)</option>
+              <option value="7">25+" (+7)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="amm">Attacker Movement</label>
+            <select id="amm">
+              <option value="0">Stationary / Walked (0)</option>
+              <option value="1">Ran / VTOL Moved (+1)</option>
+              <option value="2">Jumped (+2)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Cover</label>
+            <div class="button-group" id="cover-buttons">
+              <button type="button" data-cover="0" class="btn btn-cover active">None (0)</button>
+              <button type="button" data-cover="1" class="btn btn-cover">Partial (+1)</button>
+              <button type="button" data-cover="2" class="btn btn-cover">Heavy (+2)</button>
+            </div>
+            <input id="cover" type="number" value="0" class="hidden-input" />
+          </div>
+
+          <div class="field">
+            <label for="other">Other Modifiers</label>
+            <input id="other" type="number" value="0" />
+            <p class="hint">
+              Indirect fire, special abilities, heat, terrain, etc.
+            </p>
+          </div>
+
+          <button id="calc-btn" class="btn primary">Calculate TN</button>
+        </section>
+
+        <section class="card result-card">
+          <h2>Result</h2>
+          <p class="formula">
+            TN = Skill + Range + TMM + Attacker Move + Cover + Other
           </p>
-        </div>
+          <div id="result" class="result-value">Target Number: 4</div>
+          <p id="breakdown" class="breakdown"></p>
+        </section>
 
-        <button id="calc-btn" class="btn primary">Calculate TN</button>
-      </section>
+        <section class="card small">
+          <h2>Quick Reference</h2>
+          <ul class="ref-list">
+            <li><strong>Range:</strong> Short 0, Medium +2, Long +4, Extreme +6</li>
+            <li><strong>Attacker Move:</strong> 0 / +1 / +2 (jump)</li>
+            <li><strong>Cover:</strong> None 0, Partial +1, Heavy +2</li>
+            <li><strong>TMM:</strong> Based on target distance moved</li>
+          </ul>
+        </section>
+      </div>
 
-      <section class="card result-card">
-        <h2>Result</h2>
-        <p class="formula">
-          TN = Skill + Range + TMM + Attacker Move + Cover + Other
-        </p>
-        <div id="result" class="result-value">Target Number: 6</div>
-        <p id="breakdown" class="breakdown"></p>
-      </section>
+      <!-- Cheat Sheet Tab -->
+      <div id="cheatsheet-tab" class="tab-content">
+        <section class="card">
+          <h2>Attacker Movement</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Movement Type</th>
+                <th>TN Mod</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Stationary</td><td>0</td></tr>
+              <tr><td>Walked / Cruised</td><td>0</td></tr>
+              <tr><td>Ran / Flanked</td><td>+1</td></tr>
+              <tr><td>Jumped</td><td>+2</td></tr>
+              <tr><td>VTOL / WiGE Moved</td><td>+1</td></tr>
+            </tbody>
+          </table>
+        </section>
 
-      <section class="card small">
-        <h2>Quick Reference</h2>
-        <ul class="ref-list">
-          <li><strong>Range:</strong> Short 0, Medium +2, Long +4</li>
-          <li><strong>Attacker Move:</strong> 0 / +1 / +2 (jump)</li>
-          <li><strong>Cover:</strong> None 0, Partial +1, Heavy +2</li>
-          <li><strong>TMM:</strong> Based on target distance moved</li>
-        </ul>
-      </section>
+        <section class="card">
+          <h2>Target Movement (TMM)</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Distance Moved</th>
+                <th>TN Mod</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>0"</td><td>0</td></tr>
+              <tr><td>1-2"</td><td>0</td></tr>
+              <tr><td>3-4"</td><td>+1</td></tr>
+              <tr><td>5-6"</td><td>+2</td></tr>
+              <tr><td>7-9"</td><td>+3</td></tr>
+              <tr><td>10-12"</td><td>+4</td></tr>
+              <tr><td>13-18"</td><td>+5</td></tr>
+              <tr><td>19-24"</td><td>+6</td></tr>
+              <tr><td>25+"</td><td>+7</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="card">
+          <h2>Range Brackets</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Range</th>
+                <th>Distance</th>
+                <th>TN Mod</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Short</td><td>0-6"</td><td>0</td><td>Standard attack</td></tr>
+              <tr><td>Medium</td><td>7-24"</td><td>+2</td><td>Standard attack</td></tr>
+              <tr><td>Long</td><td>25-42"</td><td>+4</td><td>Use L damage value</td></tr>
+              <tr><td>Extreme</td><td>43-48"</td><td>+6</td><td>Use E damage value if listed</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="card">
+          <h2>Cover & Terrain</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Situation</th>
+                <th>TN Mod</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Light woods (intervening)</td><td>+1</td></tr>
+              <tr><td>Heavy woods (intervening)</td><td>+2</td></tr>
+              <tr><td>Partial cover (hull down)</td><td>+1</td></tr>
+              <tr><td>Target in building</td><td>+1 to +3</td></tr>
+              <tr><td>Low obstacle / ridge</td><td>+1</td></tr>
+              <tr><td>Smoke (per hex)</td><td>+1</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="card">
+          <h2>Heat & Overheat</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Overheat Level</th>
+                <th>Effect</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>0</td><td>No penalty</td></tr>
+              <tr><td>1</td><td>-1 to all attack rolls</td></tr>
+              <tr><td>2</td><td>-2 to attack rolls</td></tr>
+              <tr><td>3</td><td>-3 to attacks; may force shutdown</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="card">
+          <h2>Situational Modifiers</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Situation</th>
+                <th>TN Mod</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Indirect fire</td><td>+1</td></tr>
+              <tr><td>Spotter moved this turn</td><td>+1 additional</td></tr>
+              <tr><td>Target prone (≤3")</td><td>-2</td></tr>
+              <tr><td>Target prone (4"+)</td><td>+2</td></tr>
+              <tr><td>Attacker higher ground</td><td>-1</td></tr>
+              <tr><td>Night / Darkness</td><td>+2</td></tr>
+              <tr><td>Fog / Rain / Snow</td><td>+1</td></tr>
+              <tr><td>Extreme weather</td><td>+2</td></tr>
+              <tr><td>Secondary target (split fire)</td><td>+2</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="card">
+          <h2>Melee Combat Steps</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Detail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Declare Melee - must be in base contact</td></tr>
+              <tr><td>2</td><td>Apply attacker movement modifier</td></tr>
+              <tr><td>3</td><td>Apply target movement modifier</td></tr>
+              <tr><td>4</td><td>Roll 2d6 vs TN = 3 + mods</td></tr>
+              <tr><td>5</td><td>On hit: deal melee damage</td></tr>
+              <tr><td>6</td><td>Target counterattacks</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="card">
+          <h2>Melee Special Modifiers</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Situation</th>
+                <th>TN Mod</th>
+                <th>Bonus Damage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Target is prone</td><td>-2</td><td>—</td></tr>
+              <tr><td>Attacker jumped this turn</td><td>0</td><td>+1</td></tr>
+              <tr><td>Charging</td><td>0</td><td>+2</td></tr>
+              <tr><td>Death From Above</td><td>0</td><td>+2</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="card">
+          <h2>Critical Hit Table</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>2d6 Roll</th>
+                <th>Effect</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2</td><td>Ammo Explosion - 2 damage</td></tr>
+              <tr><td>3-4</td><td>Engine Hit - movement -2"</td></tr>
+              <tr><td>5-6</td><td>Weapon Malfunction</td></tr>
+              <tr><td>7</td><td>No Critical</td></tr>
+              <tr><td>8-9</td><td>Sensor Damage - +1 TN</td></tr>
+              <tr><td>10-11</td><td>Gyro Hit - must make PSR</td></tr>
+              <tr><td>12</td><td>Pilot Injury / Crew Stunned</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="card">
+          <h2>Unit Status Conditions</h2>
+          <table class="cheatsheet-table">
+            <thead>
+              <tr>
+                <th>Condition</th>
+                <th>Effect</th>
+                <th>Clear</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Prone</td><td>+2 TN at range >3"; -2 TN at ≤3"</td><td>Stand up</td></tr>
+              <tr><td>Immobile</td><td>Cannot move; +4 TN to be hit</td><td>None</td></tr>
+              <tr><td>Shutdown</td><td>Cannot move or attack</td><td>Restart on 4+</td></tr>
+              <tr><td>Crew Stunned</td><td>Lose next activation</td><td>Automatic next turn</td></tr>
+              <tr><td>On Fire</td><td>1 damage per turn</td><td>Roll 6+</td></tr>
+              <tr><td>Destroyed</td><td>Removed from play</td><td>N/A</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
     </main>
   </div>
 
