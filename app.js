@@ -8,14 +8,13 @@ function setHiddenFromButtons(groupId, inputId, activeClass, dataAttr) {
   group.addEventListener("click", (e) => {
     const btn = e.target.closest("button");
     if (!btn) return;
-    const value = Number(btn.dataset[dataAttr] ?? 0);
+    const value = btn.dataset[dataAttr] ?? "";
     input.value = value;
 
     [...group.querySelectorAll("button")].forEach((b) =>
       b.classList.remove(activeClass)
     );
     btn.classList.add(activeClass);
-    calculateTN();
   });
 }
 
@@ -62,11 +61,100 @@ function setupTabs() {
   });
 }
 
+/**
+ * Evaluate Aces behavior based on form inputs
+ */
+function evaluateAcesBehavior() {
+  const role = document.getElementById("aces-role").value;
+  const faction = document.getElementById("aces-faction").value;
+  const objective = document.getElementById("aces-objective").value;
+  const unitHealth = document.getElementById("aces-health").value;
+  const enemyDistance = document.getElementById("aces-distance").value;
+  const riskTolerance = document.getElementById("aces-risk").value;
+
+  // Call the behavior evaluation logic
+  const result = evaluateAcesBehavior({
+    role,
+    faction,
+    objective,
+    unitHealth,
+    enemyDistance,
+    riskTolerance
+  });
+
+  if (result.error) {
+    alert(result.error);
+    return;
+  }
+
+  // Display results
+  displayAcesBehavior(result);
+}
+
+/**
+ * Display Aces behavior results
+ */
+function displayAcesBehavior(result) {
+  const resultSection = document.getElementById("aces-result");
+  const roleProfile = ACES_PROFILES.roles[result.role];
+  const factionData = ACES_PROFILES.factions[result.faction];
+  const objectiveData = ACES_PROFILES.objectives[result.objective];
+
+  // Profile name and description
+  document.getElementById("aces-profile-name").textContent = 
+    `${result.role}: ${roleProfile.profile}`;
+  document.getElementById("aces-profile-desc").textContent = 
+    `Preferred Range: ${roleProfile.preferredRange} | Unit Health: ${result.unitHealth}`;
+
+  // Movement behavior
+  document.getElementById("aces-movement").textContent = 
+    roleProfile.movement[result.unitHealth]
+      .replace(/_/g, " ")
+      .toUpperCase();
+
+  // Attack behavior
+  document.getElementById("aces-attack").textContent = 
+    roleProfile.attack.risk[result.riskTolerance]
+      .replace(/_/g, " ")
+      .toUpperCase();
+
+  // Target priority
+  const targetPriority = objectiveData.targetPriority.join(" → ");
+  document.getElementById("aces-target").textContent = targetPriority;
+
+  // TN Modifier breakdown
+  const rationale = result.rationale.join(" | ");
+  document.getElementById("aces-rationale").textContent = rationale;
+
+  const modifierDisplay = document.getElementById("aces-modifier-display");
+  const modifierClass = result.tnModifier > 0 ? "penalty" : result.tnModifier < 0 ? "bonus" : "neutral";
+  modifierDisplay.className = `aces-modifier-value ${modifierClass}`;
+  modifierDisplay.textContent = 
+    `TN Modifier: ${result.tnModifier > 0 ? "+" : ""}${result.tnModifier}`;
+
+  // Faction quirks
+  const quirksSection = document.getElementById("aces-quirks-section");
+  const quirksList = document.getElementById("aces-quirks-list");
+  if (result.factionQuirks && result.factionQuirks.length > 0) {
+    quirksList.innerHTML = result.factionQuirks
+      .map(q => `<li>${q.replace(/([A-Z])/g, " $1").trim()}</li>`)
+      .join("");
+    quirksSection.style.display = "block";
+  } else {
+    quirksSection.style.display = "none";
+  }
+
+  // Show result section
+  resultSection.style.display = "block";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
   
   setHiddenFromButtons("range-buttons", "range", "active", "range");
   setHiddenFromButtons("cover-buttons", "cover", "active", "cover");
+  setHiddenFromButtons("aces-health-buttons", "aces-health", "active", "health");
+  setHiddenFromButtons("aces-risk-buttons", "aces-risk", "active", "risk");
 
   ["skill", "tmm", "amm", "other"].forEach((id) => {
     const element = document.getElementById(id);
@@ -79,6 +167,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const calcBtn = document.getElementById("calc-btn");
   if (calcBtn) {
     calcBtn.addEventListener("click", calculateTN);
+  }
+
+  const acesBtn = document.getElementById("aces-btn");
+  if (acesBtn) {
+    acesBtn.addEventListener("click", evaluateAcesBehavior);
   }
 
   calculateTN();
