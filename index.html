@@ -330,41 +330,95 @@
             Select your unit's AI deck, draw or pick a card, and get step-by-step movement and combat guidance.
           </p>
 
-          <div class="field">
-            <label>AI Deck</label>
-            <div class="button-group" id="aces-deck-buttons">
-              <button type="button" data-deck="Brawler" class="btn btn-deck active">Brawler</button>
-              <button type="button" data-deck="Skirmisher" class="btn btn-deck">Skirmisher</button>
-              <button type="button" data-deck="Sniper" class="btn btn-deck">Sniper</button>
-              <button type="button" data-deck="Striker" class="btn btn-deck">Striker</button>
+          <div class="aces-section">
+            <h3 class="aces-section-title">AI Deck</h3>
+            <div class="field">
+              <div class="button-group" id="aces-deck-buttons">
+                <button type="button" data-deck="Brawler" class="btn btn-deck active">Brawler</button>
+                <button type="button" data-deck="Skirmisher" class="btn btn-deck">Skirmisher</button>
+                <button type="button" data-deck="Sniper" class="btn btn-deck">Sniper</button>
+                <button type="button" data-deck="Striker" class="btn btn-deck">Striker</button>
+              </div>
+              <input id="aces-deck" type="hidden" value="Brawler" />
             </div>
-            <input id="aces-deck" type="hidden" value="Brawler" />
+
+            <div class="field">
+              <label for="aces-weapon-range">Deck Suggester (optional)</label>
+              <div class="aces-card-row">
+                <select id="aces-weapon-range">
+                  <option value="">Select weapon profile</option>
+                  <option value="short">Mostly short-range weapons</option>
+                  <option value="balanced">Balanced mid-range weapons</option>
+                  <option value="long">Mostly long-range weapons</option>
+                  <option value="mobile">Mobile mixed-range weapons</option>
+                </select>
+                <button id="aces-suggest-deck-btn" class="btn" type="button">Suggest Deck</button>
+              </div>
+            </div>
           </div>
 
-          <div class="field">
-            <label>Card (1–8)</label>
-            <div class="aces-card-row">
-              <button id="aces-draw-btn" class="btn" type="button" aria-label="Draw random card">🎲 Draw Random</button>
-              <select id="aces-card-number">
-                <option value="1">Card 1</option>
-                <option value="2">Card 2</option>
-                <option value="3">Card 3</option>
-                <option value="4">Card 4</option>
-                <option value="5">Card 5</option>
-                <option value="6">Card 6</option>
-                <option value="7">Card 7</option>
-                <option value="8">Card 8</option>
-              </select>
+          <div class="aces-section">
+            <h3 class="aces-section-title">Card Selection</h3>
+            <div class="field">
+              <label>Card (1–8)</label>
+              <div class="aces-card-row">
+                <button id="aces-draw-btn" class="btn" type="button" aria-label="Draw random card">🎲 Draw Random</button>
+                <select id="aces-card-number">
+                  <option value="1">Card 1</option>
+                  <option value="2">Card 2</option>
+                  <option value="3">Card 3</option>
+                  <option value="4">Card 4</option>
+                  <option value="5">Card 5</option>
+                  <option value="6">Card 6</option>
+                  <option value="7">Card 7</option>
+                  <option value="8">Card 8</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div class="field">
-            <label>Has any enemy unit moved yet this round?</label>
-            <div class="button-group" id="aces-enemy-moved-buttons">
-              <button type="button" data-moved="no" class="btn btn-moved active">No — I move first</button>
-              <button type="button" data-moved="yes" class="btn btn-moved">Yes — enemies moved</button>
+          <div class="aces-section">
+            <h3 class="aces-section-title">Tactical Context</h3>
+
+            <div class="field">
+              <label>Current Range (nearest enemy)</label>
+              <div class="button-group" id="aces-range-buttons">
+                <button type="button" data-range="short" class="btn active">Short</button>
+                <button type="button" data-range="medium" class="btn">Medium</button>
+                <button type="button" data-range="long" class="btn">Long</button>
+              </div>
+              <input id="aces-range" type="hidden" value="short" />
             </div>
-            <input id="aces-enemy-moved" type="hidden" value="no" />
+
+            <div class="field">
+              <label>Your Cover Status</label>
+              <div class="button-group" id="aces-cover-buttons">
+                <button type="button" data-cover="none" class="btn active">None</button>
+                <button type="button" data-cover="partial" class="btn">Partial</button>
+                <button type="button" data-cover="heavy" class="btn">Heavy</button>
+              </div>
+              <input id="aces-cover" type="hidden" value="none" />
+            </div>
+
+            <div class="field">
+              <label>Tactical Situation</label>
+              <div class="button-group" id="aces-situation-buttons">
+                <button type="button" data-situation="standard" class="btn active">Standard</button>
+                <button type="button" data-situation="isolated" class="btn">Isolated Target</button>
+                <button type="button" data-situation="damaged" class="btn">Damaged Visible</button>
+                <button type="button" data-situation="clustered" class="btn">Clustered Formation</button>
+              </div>
+              <input id="aces-situation" type="hidden" value="standard" />
+            </div>
+
+            <div class="field">
+              <label>Did you move first?</label>
+              <div class="button-group" id="aces-move-first-buttons">
+                <button type="button" data-first="yes" class="btn active">Yes</button>
+                <button type="button" data-first="no" class="btn">No</button>
+              </div>
+              <input id="aces-move-first" type="hidden" value="yes" />
+            </div>
           </div>
 
           <button id="aces-btn" class="btn primary">Get AI Guidance</button>
@@ -379,6 +433,12 @@
           </div>
 
           <div class="aces-output">
+            <div class="aces-box aces-box-full" id="aces-context-section" style="display: none;">
+              <h4>🧭 Tactical Context</h4>
+              <div id="aces-context-summary" class="aces-context-summary"></div>
+              <ul id="aces-context-hints" class="aces-context-hints"></ul>
+            </div>
+
             <div class="aces-box aces-box-full">
               <h4>🎯 Movement</h4>
               <div id="aces-movement-content"></div>

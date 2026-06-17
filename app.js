@@ -5,6 +5,7 @@ function getNumber(id) {
 function setHiddenFromButtons(groupId, inputId, activeClass, dataAttr) {
   const group = document.getElementById(groupId);
   const input = document.getElementById(inputId);
+  if (!group || !input) return;
   group.addEventListener("click", (e) => {
     const btn = e.target.closest("button");
     if (!btn) return;
@@ -67,8 +68,15 @@ function setupTabs() {
 function evaluateAcesFromForm() {
   const deck = document.getElementById("aces-deck").value;
   const cardNumber = parseInt(document.getElementById("aces-card-number").value, 10);
-  const enemyMovedVal = document.getElementById("aces-enemy-moved").value;
-  const enemyMoved = enemyMovedVal === "yes";
+  const moveFirstVal = document.getElementById("aces-move-first").value;
+  // Card logic expects enemyMoved: moveFirst "yes" => false, moveFirst "no" => true.
+  const enemyMoved = moveFirstVal !== "yes";
+  const context = {
+    range: document.getElementById("aces-range").value,
+    cover: document.getElementById("aces-cover").value,
+    situation: document.getElementById("aces-situation").value,
+    moveFirst: moveFirstVal
+  };
 
   const result = evaluateAcesBehavior({ deck, cardNumber, enemyMoved });
 
@@ -77,13 +85,13 @@ function evaluateAcesFromForm() {
     return;
   }
 
-  displayAcesBehavior(result);
+  displayAcesBehavior(result, context);
 }
 
 /**
  * Display Aces card-based guidance results
  */
-function displayAcesBehavior(result) {
+function displayAcesBehavior(result, context = null) {
   const resultSection = document.getElementById("aces-result");
   const { card, useIfFirst } = result;
 
@@ -93,11 +101,70 @@ function displayAcesBehavior(result) {
   document.getElementById("aces-priority-badge").textContent =
     `Priority ${card.priority}`;
 
+  const contextLabels = {
+    range: { short: "Short", medium: "Medium", long: "Long" },
+    cover: { none: "None", partial: "Partial", heavy: "Heavy" },
+    situation: {
+      standard: "Standard",
+      isolated: "Isolated Target",
+      damaged: "Damaged Visible",
+      clustered: "Clustered Formation"
+    }
+  };
+  const contextSection = document.getElementById("aces-context-section");
+  const contextSummary = document.getElementById("aces-context-summary");
+  const contextHints = document.getElementById("aces-context-hints");
+  if (context && contextSection && contextSummary && contextHints) {
+    const summary = [
+      `Range: ${contextLabels.range[context.range] || context.range}`,
+      `Cover: ${contextLabels.cover[context.cover] || context.cover}`,
+      `Situation: ${contextLabels.situation[context.situation] || context.situation}`,
+      `First to Move: ${context.moveFirst === "yes" ? "Yes" : "No"}`
+    ];
+    contextSummary.textContent = "";
+    summary.forEach((item) => {
+      const chip = document.createElement("span");
+      chip.className = "aces-context-chip";
+      chip.textContent = item;
+      contextSummary.appendChild(chip);
+    });
+
+    const hints = [];
+    if (context.range === "short") {
+      hints.push("Short range favors pressure cards and close engagement priorities.");
+    } else if (context.range === "medium") {
+      hints.push("Medium range keeps flexible firing lanes while preserving spacing.");
+    } else if (context.range === "long") {
+      hints.push("Long range favors safer positioning and ranged pressure.");
+    }
+    if (context.cover === "none") {
+      hints.push("No cover: use movement priorities to claim safer terrain where possible.");
+    } else if (context.cover === "heavy") {
+      hints.push("Heavy cover: you can hold stronger firing lines if target priority allows.");
+    }
+    if (context.situation === "isolated") {
+      hints.push("Isolated target present: prioritize finish opportunities when legal.");
+    } else if (context.situation === "damaged") {
+      hints.push("Damaged enemy visible: look for destroy-first priorities on this card.");
+    } else if (context.situation === "clustered") {
+      hints.push("Clustered formation: favor lines that pressure multiple threats.");
+    }
+    contextHints.textContent = "";
+    hints.forEach((hint) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = hint;
+      contextHints.appendChild(listItem);
+    });
+    contextSection.style.display = "block";
+  } else if (contextSection) {
+    contextSection.style.display = "none";
+  }
+
   // Movement section
   const movementContent = document.getElementById("aces-movement-content");
   if (useIfFirst) {
     movementContent.innerHTML =
-      `<p class="aces-if-first-badge">⚡ If First — no enemies have moved yet</p>` +
+      `<p class="aces-if-first-badge">⚡ First Move</p>` +
       `<p class="aces-value">${card.ifFirst}</p>`;
   } else {
     const listItems = card.movementLogic
@@ -156,7 +223,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setHiddenFromButtons("range-buttons", "range", "active", "range");
   setHiddenFromButtons("cover-buttons", "cover", "active", "cover");
   setHiddenFromButtons("aces-deck-buttons", "aces-deck", "active", "deck");
-  setHiddenFromButtons("aces-enemy-moved-buttons", "aces-enemy-moved", "active", "moved");
+  setHiddenFromButtons("aces-range-buttons", "aces-range", "active", "range");
+  setHiddenFromButtons("aces-cover-buttons", "aces-cover", "active", "cover");
+  setHiddenFromButtons("aces-situation-buttons", "aces-situation", "active", "situation");
+  setHiddenFromButtons("aces-move-first-buttons", "aces-move-first", "active", "first");
 
   // Draw random card button — pick from the currently selected deck's cards
   const drawBtn = document.getElementById("aces-draw-btn");
@@ -166,6 +236,29 @@ document.addEventListener("DOMContentLoaded", () => {
       const deckCards = ACES_CARDS.filter(c => c.deck === selectedDeck);
       const randomCard = deckCards[Math.floor(Math.random() * deckCards.length)].cardNumber;
       document.getElementById("aces-card-number").value = randomCard;
+    });
+  }
+
+  const suggestDeckBtn = document.getElementById("aces-suggest-deck-btn");
+  if (suggestDeckBtn) {
+    suggestDeckBtn.addEventListener("click", () => {
+      const weaponRangeInput = document.getElementById("aces-weapon-range");
+      if (!weaponRangeInput) return;
+      const weaponRange = weaponRangeInput.value;
+      const deckMap = {
+        short: "Brawler",
+        balanced: "Skirmisher",
+        long: "Sniper",
+        mobile: "Striker"
+      };
+      const suggestedDeck = deckMap[weaponRange];
+      if (!suggestedDeck) return;
+
+      const deckInput = document.getElementById("aces-deck");
+      deckInput.value = suggestedDeck;
+      document.querySelectorAll("#aces-deck-buttons button").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.deck === suggestedDeck);
+      });
     });
   }
 
