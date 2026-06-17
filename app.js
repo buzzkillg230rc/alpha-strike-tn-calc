@@ -65,86 +65,88 @@ function setupTabs() {
  * Evaluate Aces behavior based on form inputs
  */
 function evaluateAcesFromForm() {
-  const role = document.getElementById("aces-role").value;
-  const faction = document.getElementById("aces-faction").value;
-  const objective = document.getElementById("aces-objective").value;
-  const unitHealth = document.getElementById("aces-health").value;
-  const enemyDistance = document.getElementById("aces-distance").value;
-  const riskTolerance = document.getElementById("aces-risk").value;
+  const deck = document.getElementById("aces-deck").value;
+  const cardNumber = parseInt(document.getElementById("aces-card-number").value, 10);
+  const enemyMovedVal = document.getElementById("aces-enemy-moved").value;
+  const enemyMoved = enemyMovedVal === "yes";
 
-  // Call the behavior evaluation logic from aces-profiles.js
-  const result = evaluateAcesBehavior({
-    role,
-    faction,
-    objective,
-    unitHealth,
-    enemyDistance,
-    riskTolerance
-  });
+  const result = evaluateAcesBehavior({ deck, cardNumber, enemyMoved });
 
   if (result.error) {
     alert(result.error);
     return;
   }
 
-  // Display results
   displayAcesBehavior(result);
 }
 
 /**
- * Display Aces behavior results
+ * Display Aces card-based guidance results
  */
 function displayAcesBehavior(result) {
   const resultSection = document.getElementById("aces-result");
-  const roleProfile = ACES_PROFILES.roles[result.role];
-  const factionData = ACES_PROFILES.factions[result.faction];
-  const objectiveData = ACES_PROFILES.objectives[result.objective];
+  const { card, useIfFirst } = result;
 
-  // Profile name and description
-  document.getElementById("aces-profile-name").textContent = 
-    `${result.role}: ${roleProfile.profile}`;
-  document.getElementById("aces-profile-desc").textContent = 
-    `Preferred Range: ${roleProfile.preferredRange} | Unit Health: ${result.unitHealth}`;
+  // Card header: "Brawler 3/8" and priority badge
+  document.getElementById("aces-card-label").textContent =
+    `${card.deck} ${card.cardNumber}/8`;
+  document.getElementById("aces-priority-badge").textContent =
+    `Priority ${card.priority}`;
 
-  // Movement behavior
-  document.getElementById("aces-movement").textContent = 
-    roleProfile.movement[result.unitHealth]
-      .replace(/_/g, " ")
-      .toUpperCase();
-
-  // Attack behavior
-  document.getElementById("aces-attack").textContent = 
-    roleProfile.attack.risk[result.riskTolerance]
-      .replace(/_/g, " ")
-      .toUpperCase();
-
-  // Target priority
-  const targetPriority = objectiveData.targetPriority.join(" → ");
-  document.getElementById("aces-target").textContent = targetPriority;
-
-  // TN Modifier breakdown
-  const rationale = result.rationale.join(" | ");
-  document.getElementById("aces-rationale").textContent = rationale;
-
-  const modifierDisplay = document.getElementById("aces-modifier-display");
-  const modifierClass = result.tnModifier > 0 ? "penalty" : result.tnModifier < 0 ? "bonus" : "neutral";
-  modifierDisplay.className = `aces-modifier-value ${modifierClass}`;
-  modifierDisplay.textContent = 
-    `TN Modifier: ${result.tnModifier > 0 ? "+" : ""}${result.tnModifier}`;
-
-  // Faction quirks
-  const quirksSection = document.getElementById("aces-quirks-section");
-  const quirksList = document.getElementById("aces-quirks-list");
-  if (result.factionQuirks && result.factionQuirks.length > 0) {
-    quirksList.innerHTML = result.factionQuirks
-      .map(q => `<li>${q.replace(/([A-Z])/g, " $1").trim()}</li>`)
-      .join("");
-    quirksSection.style.display = "block";
+  // Movement section
+  const movementContent = document.getElementById("aces-movement-content");
+  if (useIfFirst) {
+    movementContent.innerHTML =
+      `<p class="aces-if-first-badge">⚡ If First — no enemies have moved yet</p>` +
+      `<p class="aces-value">${card.ifFirst}</p>`;
   } else {
-    quirksSection.style.display = "none";
+    const listItems = card.movementLogic
+      .map((step, i) =>
+        `<li><span class="step-num">${i + 1}</span><span>${step}</span></li>`
+      )
+      .join("");
+    movementContent.innerHTML =
+      `<p class="hint">Evaluate in order; use the next row as a tiebreaker when tied.</p>` +
+      `<ol class="aces-movement-list">${listItems}</ol>`;
   }
 
-  // Show result section
+  // Combat priority chain
+  const chainHtml = card.combatPriorities
+    .map((icon, i) => {
+      const arrow = i < card.combatPriorities.length - 1
+        ? `<span class="chain-arrow">→</span>`
+        : "";
+      return `<span class="combat-icon">${icon}</span>${arrow}`;
+    })
+    .join("");
+  document.getElementById("aces-combat-chain").innerHTML =
+    `<div class="combat-chain">${chainHtml}</div>`;
+
+  // Target icon descriptions
+  const descHtml = card.combatPriorities
+    .map((icon, i) => {
+      const desc = TARGET_ICON_DESCRIPTIONS[icon] || icon;
+      return `<p class="icon-desc"><strong>${i + 1}. ${icon}</strong> — ${desc}</p>`;
+    })
+    .join("");
+  document.getElementById("aces-combat-descriptions").innerHTML = descHtml;
+
+  // Special rules
+  const specialSection = document.getElementById("aces-special-section");
+  const specialList = document.getElementById("aces-special-list");
+  const specials = [];
+  if (card.usesOverheat) {
+    specials.push(
+      "<strong>Uses Overheat</strong>: AI will fire past the heat threshold if it can destroy the target."
+    );
+  }
+  if (specials.length > 0) {
+    specialList.innerHTML = specials.map(s => `<li>${s}</li>`).join("");
+    specialSection.style.display = "block";
+  } else {
+    specialSection.style.display = "none";
+  }
+
   resultSection.style.display = "block";
 }
 
@@ -153,8 +155,19 @@ document.addEventListener("DOMContentLoaded", () => {
   
   setHiddenFromButtons("range-buttons", "range", "active", "range");
   setHiddenFromButtons("cover-buttons", "cover", "active", "cover");
-  setHiddenFromButtons("aces-health-buttons", "aces-health", "active", "health");
-  setHiddenFromButtons("aces-risk-buttons", "aces-risk", "active", "risk");
+  setHiddenFromButtons("aces-deck-buttons", "aces-deck", "active", "deck");
+  setHiddenFromButtons("aces-enemy-moved-buttons", "aces-enemy-moved", "active", "moved");
+
+  // Draw random card button — pick from the currently selected deck's cards
+  const drawBtn = document.getElementById("aces-draw-btn");
+  if (drawBtn) {
+    drawBtn.addEventListener("click", () => {
+      const selectedDeck = document.getElementById("aces-deck").value;
+      const deckCards = ACES_CARDS.filter(c => c.deck === selectedDeck);
+      const randomCard = deckCards[Math.floor(Math.random() * deckCards.length)].cardNumber;
+      document.getElementById("aces-card-number").value = randomCard;
+    });
+  }
 
   ["skill", "tmm", "amm", "other"].forEach((id) => {
     const element = document.getElementById(id);

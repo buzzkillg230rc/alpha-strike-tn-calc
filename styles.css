@@ -249,21 +249,15 @@ select:focus {
   margin: 1rem 0;
 }
 
-@media (min-width: 500px) {
-  .aces-output {
-    grid-template-columns: 1fr 1fr;
-  }
-  
-  .aces-box:nth-child(3) {
-    grid-column: 1 / -1;
-  }
-}
-
 .aces-box {
   background: #111827;
   border: 1px solid #374151;
   border-radius: 0.5rem;
   padding: 0.75rem;
+}
+
+.aces-box-full {
+  grid-column: 1 / -1;
 }
 
 .aces-box h4 {
@@ -280,44 +274,146 @@ select:focus {
   line-height: 1.4;
 }
 
-.aces-modifiers {
-  background: #111827;
-  border: 1px solid #374151;
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-  margin-top: 1rem;
+/* Card header */
+.aces-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #374151;
 }
 
-.aces-modifier-value {
+.aces-card-label {
   font-size: 1.2rem;
-  font-weight: 600;
-  margin-top: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 0.35rem;
-  text-align: center;
+  font-weight: 700;
+  color: #e5e7eb;
 }
 
-.aces-modifier-value.bonus {
-  background: #064e3b;
-  color: #6ee7b7;
-}
-
-.aces-modifier-value.penalty {
-  background: #7c2d12;
-  color: #fdba74;
-}
-
-.aces-modifier-value.neutral {
+.aces-priority-badge {
   background: #374151;
+  color: #9ca3af;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+/* If First indicator */
+.aces-if-first-badge {
+  display: inline-block;
+  background: #78350f;
+  color: #fef08a;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Movement logic ordered list */
+.aces-movement-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+
+.aces-movement-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #1f2937;
+  font-size: 0.9rem;
+  color: #fbbf24;
+}
+
+.aces-movement-list li:last-child {
+  border-bottom: none;
+}
+
+.step-num {
+  background: #374151;
+  color: #9ca3af;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Combat priority chain */
+.combat-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.combat-icon {
+  background: #1d4ed8;
+  color: #dbeafe;
+  padding: 0.25rem 0.55rem;
+  border-radius: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.chain-arrow {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* Combat icon descriptions */
+.aces-icon-descriptions {
+  border-top: 1px solid #374151;
+  padding-top: 0.5rem;
+}
+
+.icon-desc {
+  font-size: 0.82rem;
+  color: #9ca3af;
+  margin: 0.2rem 0;
+}
+
+.icon-desc strong {
   color: #d1d5db;
 }
 
-.aces-quirks {
+/* Card draw row */
+.aces-card-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.aces-card-row select {
+  flex: 1;
+}
+
+.aces-card-row .btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Special rules section */
+.aces-special {
   background: #111827;
-  border: 1px solid #374151;
+  border: 1px solid #7c3aed;
   border-radius: 0.5rem;
   padding: 0.75rem;
   margin-top: 1rem;
+}
+
+.aces-special h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: #c084fc;
 }
 
 .aces-list {
@@ -329,7 +425,7 @@ select:focus {
 
 .aces-list li {
   padding: 0.25rem 0;
-  color: #a78bfa;
+  color: #c084fc;
 }
 
 .aces-list li::before {
