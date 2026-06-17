@@ -69,7 +69,7 @@ function evaluateAcesFromForm() {
   const deck = document.getElementById("aces-deck").value;
   const cardNumber = parseInt(document.getElementById("aces-card-number").value, 10);
   const moveFirstVal = document.getElementById("aces-move-first").value;
-  // Card logic expects enemyMoved. If moveFirst is "yes", enemyMoved must be false.
+  // Card logic expects enemyMoved: moveFirst "yes" => false, moveFirst "no" => true.
   const enemyMoved = moveFirstVal !== "yes";
   const context = {
     range: document.getElementById("aces-range").value,
@@ -164,7 +164,7 @@ function displayAcesBehavior(result, context = null) {
   const movementContent = document.getElementById("aces-movement-content");
   if (useIfFirst) {
     movementContent.innerHTML =
-      `<p class="aces-if-first-badge">⚡ If First — moving first</p>` +
+      `<p class="aces-if-first-badge">⚡ First Move</p>` +
       `<p class="aces-value">${card.ifFirst}</p>`;
   } else {
     const listItems = card.movementLogic
@@ -242,7 +242,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const suggestDeckBtn = document.getElementById("aces-suggest-deck-btn");
   if (suggestDeckBtn) {
     suggestDeckBtn.addEventListener("click", () => {
-      const weaponRange = document.getElementById("aces-weapon-range").value;
+      const weaponRangeInput = document.getElementById("aces-weapon-range");
+      if (!weaponRangeInput) return;
+      const weaponRange = weaponRangeInput.value;
       const deckMap = {
         short: "Brawler",
         balanced: "Skirmisher",
