@@ -69,6 +69,7 @@ function evaluateAcesFromForm() {
   const deck = document.getElementById("aces-deck").value;
   const cardNumber = parseInt(document.getElementById("aces-card-number").value, 10);
   const moveFirstVal = document.getElementById("aces-move-first").value;
+  // Card logic expects enemyMoved. If moveFirst is "yes", enemyMoved must be false.
   const enemyMoved = moveFirstVal !== "yes";
   const context = {
     range: document.getElementById("aces-range").value,
@@ -120,7 +121,13 @@ function displayAcesBehavior(result, context = null) {
       `Situation: ${contextLabels.situation[context.situation] || context.situation}`,
       `First to Move: ${context.moveFirst === "yes" ? "Yes" : "No"}`
     ];
-    contextSummary.innerHTML = summary.map((item) => `<span class="aces-context-chip">${item}</span>`).join("");
+    contextSummary.textContent = "";
+    summary.forEach((item) => {
+      const chip = document.createElement("span");
+      chip.className = "aces-context-chip";
+      chip.textContent = item;
+      contextSummary.appendChild(chip);
+    });
 
     const hints = [];
     if (context.range === "short") {
@@ -142,7 +149,12 @@ function displayAcesBehavior(result, context = null) {
     } else if (context.situation === "clustered") {
       hints.push("Clustered formation: favor lines that pressure multiple threats.");
     }
-    contextHints.innerHTML = hints.map((hint) => `<li>${hint}</li>`).join("");
+    contextHints.textContent = "";
+    hints.forEach((hint) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = hint;
+      contextHints.appendChild(listItem);
+    });
     contextSection.style.display = "block";
   } else if (contextSection) {
     contextSection.style.display = "none";
@@ -152,7 +164,7 @@ function displayAcesBehavior(result, context = null) {
   const movementContent = document.getElementById("aces-movement-content");
   if (useIfFirst) {
     movementContent.innerHTML =
-      `<p class="aces-if-first-badge">⚡ If First — you are first to move</p>` +
+      `<p class="aces-if-first-badge">⚡ If First — moving first</p>` +
       `<p class="aces-value">${card.ifFirst}</p>`;
   } else {
     const listItems = card.movementLogic
