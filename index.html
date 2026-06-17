@@ -26,6 +26,7 @@
     <div class="tab-navigation">
       <button class="tab-btn active" data-tab="calculator">Calculator</button>
       <button class="tab-btn" data-tab="cheatsheet">Cheat Sheet</button>
+      <button class="tab-btn" data-tab="aces">Aces</button>
     </div>
 
     <main>
@@ -320,9 +321,124 @@
           </table>
         </section>
       </div>
+
+      <!-- Aces Decision Engine Tab -->
+      <div id="aces-tab" class="tab-content">
+        <section class="card">
+          <h2>Aces Behavior Engine</h2>
+          <p class="hint">
+            Answer a few simple questions about your unit and current situation to determine its Aces behavior profile.
+          </p>
+
+          <div class="field">
+            <label for="aces-role">Unit Role</label>
+            <select id="aces-role">
+              <option value="Scout">Scout - Aggressive Flanker</option>
+              <option value="Skirmisher">Skirmisher - Opportunistic Harasser</option>
+              <option value="Brawler">Brawler - Direct Assault</option>
+              <option value="Sniper">Sniper - Long-Range Fire</option>
+              <option value="FireSupport">FireSupport - Anchored Support</option>
+              <option value="Assault">Assault - Slow Advance</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="aces-faction">Faction</label>
+            <select id="aces-faction">
+              <option value="Davion">Federated Suns (Balanced)</option>
+              <option value="Clan">Clan Invaders (Aggressive, Honorable)</option>
+              <option value="Kurita">Draconis Combine (Very Aggressive)</option>
+              <option value="Steiner">Lyran Commonwealth (Defensive)</option>
+              <option value="Liao">Capellan Confederation (Cunning)</option>
+              <option value="Marik">Free Worlds League (Opportunistic)</option>
+              <option value="Mercenary">Mercenary (Variable)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="aces-objective">Mission Objective</label>
+            <select id="aces-objective">
+              <option value="DestroyEnemy">Destroy Enemy Forces</option>
+              <option value="HoldGround">Hold Ground / Defend</option>
+              <option value="CaptureObjective">Capture Objective</option>
+              <option value="DelayEnemy">Delay / Harass Enemy</option>
+              <option value="Escort">Escort / Protect VIP</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Unit Health</label>
+            <div class="button-group" id="aces-health-buttons">
+              <button type="button" data-health="healthy" class="btn btn-health active">Healthy</button>
+              <button type="button" data-health="moderate" class="btn btn-health">Moderate Damage</button>
+              <button type="button" data-health="critical" class="btn btn-health">Critical Damage</button>
+            </div>
+            <input id="aces-health" type="hidden" value="healthy" />
+          </div>
+
+          <div class="field">
+            <label for="aces-distance">Enemy Distance</label>
+            <select id="aces-distance">
+              <option value="close">Too Close (uncomfortable)</option>
+              <option value="optimal">Optimal Range</option>
+              <option value="far">Too Far (out of optimal)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Risk Tolerance</label>
+            <div class="button-group" id="aces-risk-buttons">
+              <button type="button" data-risk="conservative" class="btn btn-risk">Conservative</button>
+              <button type="button" data-risk="balanced" class="btn btn-risk active">Balanced</button>
+              <button type="button" data-risk="aggressive" class="btn btn-risk">Aggressive</button>
+            </div>
+            <input id="aces-risk" type="hidden" value="balanced" />
+          </div>
+
+          <button id="aces-btn" class="btn primary">Evaluate Behavior</button>
+        </section>
+
+        <section class="card" id="aces-result" style="display: none;">
+          <h2>Behavior Profile</h2>
+
+          <div id="aces-profile-section">
+            <h3 id="aces-profile-name"></h3>
+            <p id="aces-profile-desc" class="hint"></p>
+
+            <div class="aces-output">
+              <div class="aces-box">
+                <h4>🎯 Movement Behavior</h4>
+                <p id="aces-movement" class="aces-value"></p>
+              </div>
+
+              <div class="aces-box">
+                <h4>⚔️ Attack Behavior</h4>
+                <p id="aces-attack" class="aces-value"></p>
+              </div>
+
+              <div class="aces-box">
+                <h4>🎪 Target Priority</h4>
+                <p id="aces-target" class="aces-value"></p>
+              </div>
+            </div>
+
+            <div class="aces-modifiers">
+              <h4>TN Modifier Breakdown</h4>
+              <p class="hint" id="aces-rationale"></p>
+              <div class="aces-modifier-value" id="aces-modifier-display"></div>
+            </div>
+
+            <div class="aces-quirks" id="aces-quirks-section" style="display: none;">
+              <h4>Faction Quirks</h4>
+              <ul id="aces-quirks-list" class="aces-list"></ul>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 
+  <script src="aces-profiles.js"></script>
   <script src="app.js"></script>
   <script>
     if ("serviceWorker" in navigator) {

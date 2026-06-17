@@ -64,7 +64,7 @@ function setupTabs() {
 /**
  * Evaluate Aces behavior based on form inputs
  */
-function evaluateAcesBehavior() {
+function evaluateAcesFromForm() {
   const role = document.getElementById("aces-role").value;
   const faction = document.getElementById("aces-faction").value;
   const objective = document.getElementById("aces-objective").value;
@@ -72,7 +72,7 @@ function evaluateAcesBehavior() {
   const enemyDistance = document.getElementById("aces-distance").value;
   const riskTolerance = document.getElementById("aces-risk").value;
 
-  // Call the behavior evaluation logic
+  // Call the behavior evaluation logic from aces-profiles.js
   const result = evaluateAcesBehavior({
     role,
     faction,
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const acesBtn = document.getElementById("aces-btn");
   if (acesBtn) {
-    acesBtn.addEventListener("click", evaluateAcesBehavior);
+    acesBtn.addEventListener("click", evaluateAcesFromForm);
   }
 
   calculateTN();

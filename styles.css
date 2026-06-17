@@ -88,6 +88,19 @@ body {
   font-size: 1.1rem;
 }
 
+.card h3 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.card h4 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+  color: #3b82f6;
+}
+
 .field {
   margin-bottom: 0.9rem;
 }
@@ -129,6 +142,7 @@ select:focus {
   padding: 0.35rem 0.7rem;
   font-size: 0.85rem;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .btn:hover {
@@ -225,6 +239,102 @@ select:focus {
 
 .cheatsheet-table tbody tr:hover {
   background: #111827;
+}
+
+/* Aces Behavior Engine Styles */
+.aces-output {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+@media (min-width: 500px) {
+  .aces-output {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .aces-box:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+
+.aces-box {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.aces-box h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.aces-value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fbbf24;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.aces-modifiers {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-top: 1rem;
+}
+
+.aces-modifier-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.35rem;
+  text-align: center;
+}
+
+.aces-modifier-value.bonus {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+.aces-modifier-value.penalty {
+  background: #7c2d12;
+  color: #fdba74;
+}
+
+.aces-modifier-value.neutral {
+  background: #374151;
+  color: #d1d5db;
+}
+
+.aces-quirks {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin-top: 1rem;
+}
+
+.aces-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+}
+
+.aces-list li {
+  padding: 0.25rem 0;
+  color: #a78bfa;
+}
+
+.aces-list li::before {
+  content: "• ";
+  margin-right: 0.5rem;
 }
 
 @media (min-width: 600px) {
